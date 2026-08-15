@@ -1,10 +1,29 @@
 const makeLesson=(id,week,day,title,concept,explanation,analogy,visual,recognize,apply,assignment,type='lesson')=>({
-  id,course:'S0',week,day,title,concept,type,
+  id,course:'S0',week,day,title,concept,type,duration:type==='exam'?'90–120 minutes':'60 minutes',
   objective:`Understand ${title.toLowerCase()} and demonstrate the idea through explanation, recognition, and application.`,
   theory:explanation,intuition:analogy,visual,
+  part1:{
+    title:'Build the core model',time:'About 20 minutes',
+    explanation,
+    guidance:`Read slowly, connect the explanation to the mental model, and say the three-step sequence aloud. Focus on what changes from ${visual[0].toLowerCase()} to ${visual[2].toLowerCase()}.`
+  },
+  checkpoint1:{question:recognize.question,options:recognize.options,answer:recognize.answer,explanation:recognize.explanation},
+  part2:{
+    title:'Connect the model to practice',time:'About 20 minutes',
+    explanation:`Now move from recognizing the term to using it. The practical task for this concept is: ${apply} A strong application identifies the situation, follows the model in order, and checks whether the result matches the goal.`,
+    guidance:`Use this sequence as your internal checklist: ${visual.join(' → ')}. Compare a correct use of the concept with a weak use that skips one of these steps.`
+  },
+  checkpoint2:{
+    question:`Which sequence correctly represents the mental model for ${title.toLowerCase()}?`,
+    options:[visual.join(' → '),[visual[2],visual[1],visual[0]].join(' → '),`${visual[0]} → skip the middle step → ${visual[2]}`],
+    answer:0,explanation:`The lesson model follows this order: ${visual.join(' → ')}.`
+  },
   prompt:`Without looking back, explain ${title.toLowerCase()} in your own words and state why it matters.`,
   recognize:{question:recognize.question,options:recognize.options,answer:recognize.answer,explanation:recognize.explanation},
-  apply:{prompt:apply},assignment:{title:assignment.title,instructions:assignment.instructions},resources:['r-original-s0']
+  apply:{prompt:apply},
+  assignment:{title:assignment.title,instructions:assignment.instructions},
+  homework:{title:assignment.title,instructions:assignment.instructions,estimatedTime:type==='exam'?'45–90 minutes':'20–40 minutes'},
+  resources:['r-original-s0']
 });
 
 window.S0_LESSONS=[
